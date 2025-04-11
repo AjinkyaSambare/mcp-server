@@ -1,174 +1,159 @@
+# Basic Math MCP Server
 
-```markdown
-# Math Calculator MCP Server
+A simple yet powerful MCP server built using the [FastMCP framework](https://pypi.org/project/mcp-server/) that enables basic math operations like addition, subtraction, multiplication, and division — usable right inside Claude Desktop or any MCP-compatible environment.
 
-A custom MCP server that provides mathematical calculation tools and resources for AI assistants.
+---
 
-## Components
+##  What is MCP?
 
-### Tools
-The server provides basic and advanced mathematical operations:
+**MCP (Model Context Protocol)** is an open standard developed by Anthropic that allows external tools, APIs, or scripts to be exposed to large language models (LLMs) like Claude in a structured and interactive way.
 
-- **add**: Add two numbers together
-- **subtract**: Subtract the second number from the first
-- **multiply**: Multiply two numbers together
-- **divide**: Divide the first number by the second
-- **calculate_percentage**: Calculate a percentage of a value
-- **power**: Raise a number to a specified power
-- **square_root**: Calculate the square root of a number
+With MCP, developers can:
+- Build custom tools accessible by language models.
+- Extend capabilities of Claude with Python scripts or microservices.
+- Share structured data or custom responses via `@tool()` and `@resource()` decorators.
 
-### Resources
-The server provides reference formulas as resources:
+---
 
-- **formula://area**: Common formulas for calculating area of different shapes
-- **formula://volume**: Common formulas for calculating volume of different 3D shapes
-- **formula://trigonometry**: Common trigonometric formulas and identities
+## What is a Custom MCP Server?
 
-### Prompts
-The server includes templates for solving mathematics problems:
+A **Custom MCP Server** is a Python-based service that implements the MCP specification using the `mcp-server` library. These servers:
+- Define callable tools (`@tool`) for computation or automation.
+- Host resources (`@resource`) like documentation or reference data.
+- Run locally or remotely, responding to MCP clients such as Claude Desktop.
 
-- **solve_math_problem**: Template for solving math word problems step by step
-- **formula_application**: Template for applying a specific formula to solve a problem
+MCP servers enable low-latency, secure, and contextual integration between your own code and the capabilities of LLMs.
 
-## Configuration
+---
 
-### Environment Variables
-This server doesn't require any specific environment variables.
+##  What We’ve Built
 
-## Quickstart
+This project is a minimal but complete MCP server offering basic arithmetic capabilities. Tools exposed:
 
-### Install
+### Tools:
+- `add(a, b)` – Returns the sum of two numbers.
+- `subtract(a, b)` – Returns the result of subtracting `b` from `a`.
+- `multiply(a, b)` – Returns the product of `a` and `b`.
+- `divide(a, b)` – Returns the quotient of `a` divided by `b`. Handles division by zero.
 
-#### Claude Desktop
-On MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
-On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+### Resources:
+- `calculator://help` – A Markdown-formatted help file that explains usage of all tools.
 
-<details>
-<summary>Development/Unpublished Servers Configuration</summary>
+---
 
+## Prerequisites
+
+Before getting started, make sure you have the following installed:
+
+- Python 3.9+
+- Claude Desktop (or any MCP-compatible interface)
+- [uv](https://github.com/astral-sh/uv) runtime (for fast, isolated Python execution)
+
+---
+
+## Installation Steps
+
+### ① Install `uv` (required to run MCP servers)
+
+#### macOS/Linux:
+```bash
+curl -Ls https://astro.build/install/uv | bash
+```
+This will install `uv` to `~/.local/bin/uv`
+
+#### Windows (PowerShell):
+```powershell
+irm https://astro.build/install/uv.ps1 | iex
+```
+You may need to restart your terminal or add `uv` to PATH.
+
+---
+
+### ② Install the MCP Server
+
+Use `uv` to install `mcp-server` and run your server:
+```bash
+uv pip install mcp-server
+```
+
+To run the server manually:
+```bash
+uv run mcp-server
+```
+
+---
+
+## Integration with Claude Desktop
+
+Once installed, you need to configure Claude to discover this MCP server.
+
+###  Locate `claude_desktop_config.json`
+This file holds MCP server configurations for Claude Desktop. Add or update as below.
+
+### If You Don’t Have Any MCP Servers:
+Paste this entire block into your config:
 ```json
-"mcpServers": {
-  "mcp-server": {
-    "command": "uv",
-    "args": [
-      "--directory",
-      "/Users/Ajinkya25/Documents/Idea-Labs/MCP/mcp-server",
-      "run",
-      "mcp-server"
-    ]
+{
+  "mcpServers": {
+    "mcp-server": {
+      "command": "uv",
+      "args": [
+        "run",
+        "mcp-server"
+      ]
+    }
   }
 }
 ```
-</details>
 
-<details>
-<summary>Published Servers Configuration</summary>
-
+### If You Already Have MCP Servers:
+Just add the following entry to the `"mcpServers"` object:
 ```json
-"mcpServers": {
-  "mcp-server": {
-    "command": "uvx",
-    "args": [
-      "mcp-server"
-    ]
-  }
+"mcp-server": {
+  "command": "uv",
+  "args": [
+    "run",
+    "mcp-server"
+  ]
 }
 ```
-</details>
 
-## Development
+Make sure your JSON stays valid (e.g., commas between entries).
 
-### Testing Locally
-To test the server locally:
+---
 
-```bash
-# Activate the virtual environment (if not already activated)
-source .venv/bin/activate  # On macOS/Linux
+##  Usage Examples
 
-# Test the server in development mode
-mcp dev -m mcp_server.server
+
+
+---
+
+## Tool Help Resource
+
+You can also use the built-in help:
+```plaintext
+resource: calculator://help
 ```
 
-### Building and Publishing
-To prepare the package for distribution:
+It returns markdown-formatted instructions for all tools.
 
-1. Sync dependencies and update lockfile:
-```bash
-uv sync
-```
+---
 
-2. Build package distributions:
-```bash
-uv build
-```
-This will create source and wheel distributions in the `dist/` directory.
+## 🎯 Future Enhancements
 
-3. Publish to PyPI:
-```bash
-uv publish
-```
+- Add support for:
+  - Percentage calculations
+  - Power/exponent functions
+  - Rounding and formatting options
+- Add authentication for shared or public MCP servers
+- Extend with usage logs and analytics
 
-Note: You'll need to set PyPI credentials via environment variables or command flags:
-- Token: `--token` or `UV_PUBLISH_TOKEN`
-- Or username/password: `--username`/`UV_PUBLISH_USERNAME` and `--password`/`UV_PUBLISH_PASSWORD`
+---
 
-### Debugging
-Since MCP servers run over stdio, debugging can be challenging. For the best debugging
-experience, we strongly recommend using the [MCP Inspector](https://github.com/modelcontextprotocol/inspector).
+## 🔗 Useful Links
 
-You can launch the MCP Inspector via [`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) with this command:
-```bash
-npx @modelcontextprotocol/inspector uv --directory /Users/Ajinkya25/Documents/Idea-Labs/MCP/mcp-server run mcp-server
-```
+- PyPI: [MCP-Server](https://pypi.org/project/mcp-server/)
+- Claude + MCP Docs: [Official Anthropic Guide](https://docs.anthropic.com/claude/docs/custom-mcp-tools)
+- GitHub UV Runtime: [https://github.com/astral-sh/uv](https://github.com/astral-sh/uv)
 
-Upon launching, the Inspector will display a URL that you can access in your browser to begin debugging.
-
-## License
-
-MIT
-```
-
-## Testing Your MCP Server
-
-Now let's make sure your MCP server works properly:
-
-1. Save the updated code to `src/mcp_server/server.py`
-2. Save the updated README.md
-3. Test your server using:
-
-```bash
-mcp dev -m mcp_server.server
-```
-
-This should open the MCP Inspector in your browser where you can try out your math tools.
-
-## Publishing to PyPI
-
-Once you've tested your server and confirmed it works, you can publish it to PyPI:
-
-1. Make sure you have a PyPI account (register at https://pypi.org/account/register/ if needed)
-2. Build your package:
-
-```bash
-uv build
-```
-
-3. Publish to PyPI:
-
-```bash
-uv publish --token YOUR_PYPI_TOKEN
-```
-
-Or if you prefer to use username/password:
-
-```bash
-uv publish --username YOUR_USERNAME --password YOUR_PASSWORD
-```
-
-After publishing, anyone can install your MCP server using:
-
-```bash
-pip install mcp-server
-```
-
-And then use it with Claude Desktop by configuring their claude_desktop_config.json as shown in the README.
+---
