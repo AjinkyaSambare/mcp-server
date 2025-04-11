@@ -4,7 +4,7 @@ A simple yet powerful MCP server built using the [FastMCP framework](https://pyp
 
 ---
 
-##  What is MCP?
+## What is MCP?
 
 **MCP (Model Context Protocol)** is an open standard developed by Anthropic that allows external tools, APIs, or scripts to be exposed to large language models (LLMs) like Claude in a structured and interactive way.
 
@@ -26,7 +26,7 @@ MCP servers enable low-latency, secure, and contextual integration between your 
 
 ---
 
-##  What We’ve Built
+## What We’ve Built
 
 This project is a minimal but complete MCP server offering basic arithmetic capabilities. Tools exposed:
 
@@ -53,7 +53,7 @@ Before getting started, make sure you have the following installed:
 
 ## Installation Steps
 
-### ① Install `uv` (required to run MCP servers)
+### Step 1: Install `uv` (required to run MCP servers)
 
 #### macOS/Linux:
 ```bash
@@ -69,7 +69,7 @@ You may need to restart your terminal or add `uv` to PATH.
 
 ---
 
-### ② Install the MCP Server
+### Step 2: Install the MCP Server
 
 Use `uv` to install `mcp-server` and run your server:
 ```bash
@@ -87,7 +87,7 @@ uv run mcp-server
 
 Once installed, you need to configure Claude to discover this MCP server.
 
-###  Locate `claude_desktop_config.json`
+### Locate `claude_desktop_config.json`
 This file holds MCP server configurations for Claude Desktop. Add or update as below.
 
 ### If You Don’t Have Any MCP Servers:
@@ -107,7 +107,7 @@ Paste this entire block into your config:
 ```
 
 ### If You Already Have MCP Servers:
-Just add the following entry to the `"mcpServers"` object:
+Just add the following entry to the "mcpServers" object:
 ```json
 "mcp-server": {
   "command": "uv",
@@ -122,9 +122,11 @@ Make sure your JSON stays valid (e.g., commas between entries).
 
 ---
 
-##  Usage Examples
+## Usage Examples
 
+![Usage Example](https://github.com/user-attachments/assets/cdf75f14-b79c-4c03-b54b-e2329b4be716)
 
+This image illustrates how the Basic Math MCP Server works in real-time with Claude Desktop.
 
 ---
 
@@ -139,21 +141,13 @@ It returns markdown-formatted instructions for all tools.
 
 ---
 
-## 🎯 Future Enhancements
-
-- Add support for:
-  - Percentage calculations
-  - Power/exponent functions
-  - Rounding and formatting options
-- Add authentication for shared or public MCP servers
-- Extend with usage logs and analytics
-
----
-
-## 🔗 Useful Links
+## Useful Links
 
 - PyPI: [MCP-Server](https://pypi.org/project/mcp-server/)
 - Claude + MCP Docs: [Official Anthropic Guide](https://docs.anthropic.com/claude/docs/custom-mcp-tools)
 - GitHub UV Runtime: [https://github.com/astral-sh/uv](https://github.com/astral-sh/uv)
 
 ---
+
+
+
